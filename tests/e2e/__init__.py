@@ -1,0 +1,5 @@
+"""
+End-to-End Tests Package.
+
+Owned by: Developer 1 (System Architect)
+"""
