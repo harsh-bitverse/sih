@@ -24,6 +24,22 @@ class MultimodalStatus(str, Enum):
     FAILED = "FAILED"
 
 
+class Modality(str, Enum):
+    """Recognised values for MultimodalRequest.modalities.
+
+    Strings remain accepted for forward compatibility; unknown values are
+    reported in metadata rather than rejected, so a caller asking for a
+    modality we have not built yet gets a clear answer instead of a crash.
+    """
+    OCR = "ocr"
+    LAYOUT = "layout"
+    VISION = "vision"
+    TABLE = "table"
+
+
+SUPPORTED_MODALITIES = frozenset({Modality.OCR.value})
+
+
 class MultimodalRequest(BaseModel):
     """
     Contract requesting multimodal analysis (OCR, vision parsing, document processing).
@@ -34,7 +50,11 @@ class MultimodalRequest(BaseModel):
         default_factory=list, description="Requested processing modalities (e.g. ocr, layout, vision)"
     )
     parameters: Dict[str, Any] = Field(
-        default_factory=dict, description="Processing parameters (e.g. language, resolution)"
+        default_factory=dict,
+        description=(
+            "Processing parameters. Recognised: dpi (int), lang (str), "
+            "max_pages (int), min_line_confidence (float 0-1)."
+        ),
     )
 
 
