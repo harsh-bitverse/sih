@@ -1,0 +1,36 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 636 >>
+stream
+BT /F1 12 Tf 50 750 Td 15 TL
+(MRPL - SOP-CRU-401 (Revision v3.2) - ACTIVE) Tj T*
+T*
+(CRUDE DISTILLATION UNIT FLANGE MAINTENANCE SPECIFICATION) Tj T*
+(Effective Date: 2024-01-15 | Department: Mechanical Maintenance) Tj T*
+() Tj T*
+(Section 4.1 Flange Torquing:) Tj T*
+(Before hot bolting, verify line temperature is below 150 deg C.) Tj T*
+(For ASTM A193 B7 bolts on Heat Exchanger E-204 nozzle flanges,) Tj T*
+(apply cross-pattern torque in three stages:) Tj T*
+(Stage 1: 30% \(90 Nm\)) Tj T*
+(Stage 2: 60% \(180 Nm\)) Tj T*
+(Stage 3: 100% final \(300 Nm\).) Tj T*
+(Always replace spiral-wound gaskets with 316L SS inner ring.) Tj T*
+ET
+endstream
+endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000928 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+998
+%%EOF

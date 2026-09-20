@@ -1,0 +1,28 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 310 >>
+stream
+BT /F1 12 Tf 50 750 Td 15 TL
+(MRPL - SOP-CRU-401 (Revision v1.0) - [SUPERSEDED - DO NOT USE]) Tj T*
+T*
+(ARCHIVED FLANGE MAINTENANCE PROCEDURE \(SUPERSEDED 2021\)) Tj T*
+(Section 3.0: E-204 flange torque requirement: Tighten bolts to 220 Nm.) Tj T*
+(Asbestos-filled gaskets may be reused if undamaged.) Tj T*
+ET
+endstream
+endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000602 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+672
+%%EOF
