@@ -1,0 +1,4 @@
+Location Tag,Nominal Thk (mm),Measured Thk (mm),Min Allowable (mm),Status
+E-204 Shell Section A,16.0,14.8,12.5,ACCEPTABLE
+E-204 Nozzle N1,12.5,9.4,9.0,ALERT
+E-204 Channel Head,18.0,17.2,14.0,ACCEPTABLE
