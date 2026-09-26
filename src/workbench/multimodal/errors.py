@@ -43,3 +43,11 @@ class ResourceAccessDeniedError(SecurityViolationError):
     Deliberately a SecurityViolationError, not a MultimodalError: a denied
     path is a policy event that the audit subsystem must be able to see.
     """
+
+
+class VisionModelUnavailableError(MultimodalError):
+    """No vision model is reachable, or none is configured."""
+
+
+class VisionOutputInvalidError(MultimodalError):
+    """The model's response could not be parsed into valid observations."""

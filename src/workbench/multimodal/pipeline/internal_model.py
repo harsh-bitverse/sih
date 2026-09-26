@@ -23,13 +23,14 @@ from pydantic import BaseModel, Field, model_validator
 
 from workbench.core.types import ConfidenceSource
 
-INTERNAL_MODEL_VERSION = "0.3.0"
+INTERNAL_MODEL_VERSION = "0.4.0"
 
 
 class FragmentKind(str, Enum):
     """Maps to core Evidence.evidence_type."""
     TEXT_LINE = "text_line"
-    # slice 2: VISUAL_OBSERVATION; slice 3: TABLE_CELL, DRAWING_LABEL
+    VISUAL_OBSERVATION = "visual_observation"
+    # slice 3: TABLE_CELL, DRAWING_LABEL
 
 
 class ErrorStage(str, Enum):
@@ -93,6 +94,7 @@ class ExtractedFragment(BaseModel):
     provenance: PageProvenance
     region: Optional[Region] = None
     confidence: Optional[Confidence] = None
+    category: Optional[str] = None
     extractor: str
 
 

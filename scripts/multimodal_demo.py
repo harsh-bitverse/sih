@@ -6,9 +6,14 @@ Owned by: Developer 4 (Multimodal Engineer)
     python scripts/multimodal_demo.py <file.pdf|file.png>
     python scripts/multimodal_demo.py <file> --json
     python scripts/multimodal_demo.py <file> --audit
+    python scripts/multimodal_demo.py <file> --vision-mock
 
 --audit walks one evidence item back to the stored page image, which is the
 traceability claim this subsystem exists to support.
+
+--vision-mock runs OCR plus the vision path using a CANNED model response.
+It demonstrates the flow and the output shape before a real model exists.
+The observations it prints are fake and say so.
 """
 
 import argparse
@@ -21,8 +26,29 @@ from workbench.core.types import ResourceReference, ResourceType
 from workbench.multimodal.adapters.local_artifact_store import LocalArtifactStore
 from workbench.multimodal.adapters.path_resource_resolver import PathResourceResolver
 from workbench.multimodal.adapters.tesseract_backend import TesseractOcrBackend
+from workbench.multimodal.ports.vision_model import VisionModelResponse
 from workbench.multimodal.processor import DefaultMultimodalProcessor
 from workbench.multimodal.schemas import MultimodalRequest
+
+
+class CannedVisionClient:
+    """DEMO ONLY. Returns a fixed answer regardless of the image."""
+
+    @property
+    def name(self) -> str:
+        return "canned-demo-model (NOT A REAL MODEL)"
+
+    def generate(self, image_png, prompt, max_output_tokens=None):
+        return VisionModelResponse(
+            text=(
+                '{"observations": ['
+                '{"observation": "[MOCK] Surface corrosion near lower flange", '
+                '"category": "corrosion", "region": [100, 550, 400, 800], '
+                '"confidence": 0.82}]}'
+            ),
+            model_name=self.name,
+            box_scale=1000,
+        )
 
 
 def main() -> int:
@@ -31,6 +57,8 @@ def main() -> int:
     parser.add_argument("--dpi", type=int, default=200)
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--audit", action="store_true")
+    parser.add_argument("--vision-mock", action="store_true",
+                        help="also run the vision path with a canned fake model")
     parser.add_argument("--artifacts", default="outputs/multimodal_artifacts")
     args = parser.parse_args()
 
@@ -45,8 +73,10 @@ def main() -> int:
     resolver = PathResourceResolver(allowed_roots=[source.parent])
     store = LocalArtifactStore(args.artifacts)
     processor = DefaultMultimodalProcessor(
-        TesseractOcrBackend(), resolver, store, dpi=args.dpi
+        TesseractOcrBackend(), resolver, store, dpi=args.dpi,
+        vision_client=CannedVisionClient() if args.vision_mock else None,
     )
+    modalities = ["ocr", "vision"] if args.vision_mock else ["ocr"]
 
     result = processor.process(
         MultimodalRequest(
@@ -62,7 +92,7 @@ def main() -> int:
                 resource_type=ResourceType.USER_PROVIDED,
                 uri_or_path=str(source),
             ),
-            modalities=["ocr"],
+            modalities=modalities,
         )
     )
 
@@ -84,18 +114,24 @@ def main() -> int:
         print("Region     :", item.provenance["region"])
         print("Document   :", item.provenance["document_hash"][:16], "...")
         print("Extractor  :", item.provenance["extractor"])
-        print("Confidence :", item.confidence, "via", item.confidence_source.value)
+        print("Confidence :", item.confidence, "via",
+              item.confidence_source.value if item.confidence_source else "none")
         return 0
 
     print(f"status: {result.status.value}")
     for item in result.evidence:
-        region = item.provenance.get("region", {})
+        region = item.provenance.get("region")
+        where = (
+            f"({region['x0']:.3f},{region['y0']:.3f})-({region['x1']:.3f},{region['y1']:.3f})"
+            if region else "(no region)"
+        )
+        conf = (
+            f"conf={item.confidence:.2f} {item.confidence_source.value}"
+            if item.confidence is not None else "conf=none"
+        )
         print(
-            f"[p{item.provenance['page_index']} "
-            f"({region.get('x0', 0):.3f},{region.get('y0', 0):.3f})-"
-            f"({region.get('x1', 0):.3f},{region.get('y1', 0):.3f}) "
-            f"conf={item.confidence:.2f} {item.confidence_source.value}] "
-            f"{item.content}"
+            f"[{item.evidence_type:<18} p{item.provenance['page_index']} "
+            f"{where} {conf}] {item.content}"
         )
     for error in result.errors:
         print("ERROR:", error)

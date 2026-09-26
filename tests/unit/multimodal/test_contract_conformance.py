@@ -159,11 +159,11 @@ def test_unsupported_modality_is_reported_not_fatal(
         MultimodalRequest(
             request_context=context,
             resource=scanned_resource,
-            modalities=["ocr", "vision"],
+            modalities=["ocr", "table"],
         )
     )
     assert result.evidence
-    assert result.metadata["unsupported_modalities"] == ["vision"]
+    assert result.metadata["unsupported_modalities"] == ["table"]
 
 
 def test_standalone_image_is_handled(
@@ -171,7 +171,7 @@ def test_standalone_image_is_handled(
 ):
     result = process(backend, resolver, store, context, photo_resource)
     assert result.evidence
-    assert result.metadata["page_count"] == 1
+    assert result.metadata["modalities"]["ocr"]["page_count"] == 1
 
 
 def test_low_confidence_lines_can_be_dropped(
@@ -187,10 +187,11 @@ def test_metadata_reports_execution_facts(
     backend, resolver, store, context, scanned_resource
 ):
     metadata = process(backend, resolver, store, context, scanned_resource).metadata
-    assert metadata["extractor"] == "fake-ocr-1.0"
-    assert metadata["page_count"] == 1
     assert metadata["subsystem"] == "multimodal"
     assert metadata["latency_ms"] >= 0
+    ocr = metadata["modalities"]["ocr"]
+    assert ocr["extractor"] == "fake-ocr-1.0"
+    assert ocr["page_count"] == 1
 
 
 def test_result_is_json_serialisable(

@@ -47,6 +47,8 @@ def fragment_to_evidence(fragment: ExtractedFragment) -> Evidence:
         # Structured, so consumers need not parse the location string.
         provenance["region"] = fragment.region.model_dump()
         provenance["region_space"] = "normalized_0_1_origin_top_left"
+    if fragment.category:
+        provenance["category"] = fragment.category
     if fragment.confidence is not None and fragment.confidence.interpretation:
         provenance["confidence_interpretation"] = fragment.confidence.interpretation
 

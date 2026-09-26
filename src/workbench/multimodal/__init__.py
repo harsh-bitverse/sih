@@ -14,7 +14,7 @@ from workbench.multimodal.schemas import (
 )
 from workbench.multimodal.processor import MultimodalProcessor, DefaultMultimodalProcessor
 from workbench.multimodal.ocr import OCREngine, TesseractOCREngine
-from workbench.multimodal.vision import VisionEngine
+from workbench.multimodal.vision import VisionEngine, LocalVisionEngine
 from workbench.multimodal.document import DocumentParser, OcrDocumentParser
 from workbench.multimodal.errors import (
     MultimodalError,
@@ -24,6 +24,8 @@ from workbench.multimodal.errors import (
     ArtifactStoreError,
     ResourceResolutionError,
     ResourceAccessDeniedError,
+    VisionModelUnavailableError,
+    VisionOutputInvalidError,
 )
 
 __all__ = [
@@ -37,6 +39,7 @@ __all__ = [
     "OCREngine",
     "TesseractOCREngine",
     "VisionEngine",
+    "LocalVisionEngine",
     "DocumentParser",
     "OcrDocumentParser",
     "MultimodalError",
@@ -46,4 +49,6 @@ __all__ = [
     "ArtifactStoreError",
     "ResourceResolutionError",
     "ResourceAccessDeniedError",
+    "VisionModelUnavailableError",
+    "VisionOutputInvalidError",
 ]

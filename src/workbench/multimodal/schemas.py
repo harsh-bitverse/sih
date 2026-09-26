@@ -37,7 +37,7 @@ class Modality(str, Enum):
     TABLE = "table"
 
 
-SUPPORTED_MODALITIES = frozenset({Modality.OCR.value})
+SUPPORTED_MODALITIES = frozenset({Modality.OCR.value, Modality.VISION.value})
 
 
 class MultimodalRequest(BaseModel):
@@ -52,8 +52,8 @@ class MultimodalRequest(BaseModel):
     parameters: Dict[str, Any] = Field(
         default_factory=dict,
         description=(
-            "Processing parameters. Recognised: dpi (int), lang (str), "
-            "max_pages (int), min_line_confidence (float 0-1)."
+            "Processing parameters. Recognised: dpi (int), max_pages (int), "
+            "min_line_confidence (float 0-1), objective (str, vision task)."
         ),
     )
 

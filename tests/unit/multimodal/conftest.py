@@ -141,3 +141,60 @@ def digital_resource(documents):
         resource_type=ResourceType.USER_PROVIDED,
         uri_or_path=str(documents["digital"]),
     )
+
+
+# -- vision test doubles --------------------------------------------------
+
+from workbench.multimodal.errors import VisionModelUnavailableError  # noqa: E402
+from workbench.multimodal.ports.vision_model import VisionModelResponse  # noqa: E402
+
+GOOD_VISION_JSON = (
+    '{"observations": ['
+    '{"observation": "Surface corrosion near lower flange", "category": "corrosion", '
+    '"region": [0.10, 0.55, 0.40, 0.80], "confidence": 0.82},'
+    '{"observation": "Tag plate reads V-204", "category": "label", '
+    '"region": null, "confidence": null}'
+    ']}'
+)
+
+
+class ScriptedVisionClient:
+    """Returns scripted responses in order; the last one repeats.
+
+    Each script entry is either response text or an Exception to raise.
+    Records every prompt so tests can inspect what the model was told.
+    """
+
+    def __init__(self, script=None, box_scale: float = 1.0, name="fake-vlm-1.0"):
+        self._script = list(script) if script is not None else [GOOD_VISION_JSON]
+        self._box_scale = box_scale
+        self._name = name
+        self.prompts = []
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    def generate(self, image_png, prompt, max_output_tokens=None):
+        self.prompts.append(prompt)
+        index = min(len(self.prompts) - 1, len(self._script) - 1)
+        step = self._script[index]
+        if isinstance(step, Exception):
+            raise step
+        return VisionModelResponse(
+            text=step, model_name=self._name, box_scale=self._box_scale
+        )
+
+    @property
+    def calls(self) -> int:
+        return len(self.prompts)
+
+
+@pytest.fixture
+def vision_client():
+    return ScriptedVisionClient()
+
+
+@pytest.fixture
+def unavailable_client():
+    return ScriptedVisionClient(script=[VisionModelUnavailableError("GPU host down")])
