@@ -8,7 +8,7 @@ Model selection is driven by capability and task requirements, not file extensio
 """
 
 from typing import List, Optional
-from workbench.models.interfaces import AgentRequest
+from workbench.models.interfaces import AgentRequest, AgentResult
 
 
 class ModelRegistry:
@@ -21,3 +21,10 @@ class ModelRegistry:
         Selects an appropriate model based on required capabilities and task requirements.
         """
         raise NotImplementedError("ModelRegistry.select_model will be implemented by Developer 2.")
+
+    def execute(self, request: AgentRequest) -> AgentResult:
+        """
+        Executes an agent request using the appropriate selected model.
+        """
+        raise NotImplementedError("ModelRegistry.execute will be implemented by Developer 2.")
+

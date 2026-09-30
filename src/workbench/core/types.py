@@ -6,7 +6,7 @@ Subsystem: core
 """
 
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 from pydantic import BaseModel, Field
 
 
@@ -42,12 +42,16 @@ class Evidence(BaseModel):
         default=None, description="Detailed location reference (page number, bounding box, line, URI)"
     )
     evidence_type: str = Field(description="Categorical type of evidence (e.g. text_snippet, table, visual_feature)")
-    provenance: Dict[str, Any] = Field(
+    provenance: dict[str, Any] = Field(
         default_factory=dict, description="Detailed origin and extraction chain details"
     )
     confidence: Optional[float] = Field(
-        default=None, description="Optional numerical confidence score between 0.0 and 1.0"
+    default=None,
+    ge=0.0,
+    le=1.0,
+    description="Optional numerical confidence score between 0.0 and 1.0",
     )
+    
     confidence_source: Optional[ConfidenceSource] = Field(
         default=None, description="Source system or model that calculated the confidence score"
     )
@@ -63,12 +67,12 @@ class ResourceReference(BaseModel):
     resource_id: str = Field(description="Unique resource identifier")
     resource_type: ResourceType = Field(description="Classification of resource source")
     uri_or_path: str = Field(description="Internal controlled URI or file path")
-    provenance: Dict[str, Any] = Field(
+    provenance: dict[str, Any] = Field(
         default_factory=dict, description="Origin tracking information for security & audit"
     )
     access_policy: Optional[str] = Field(
         default=None, description="Optional access policy name or scope constraint"
     )
-    metadata: Dict[str, Any] = Field(
+    metadata: dict[str, Any] = Field(
         default_factory=dict, description="Custom resource metadata properties"
     )

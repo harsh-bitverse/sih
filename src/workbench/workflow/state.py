@@ -6,13 +6,17 @@ Subsystem: workflow
 """
 
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any
+
 from pydantic import BaseModel, Field
+
 from workbench.core.artifacts import Artifact
+from workbench.core.context import RequestContext
 
 
 class StepStatus(str, Enum):
     """Lifecycle status of an execution step."""
+
     PENDING = "PENDING"
     READY = "READY"
     RUNNING = "RUNNING"
@@ -21,21 +25,61 @@ class StepStatus(str, Enum):
     SKIPPED = "SKIPPED"
 
 
+class WorkflowStatus(str, Enum):
+    """Lifecycle status of the overall workflow."""
+
+    CREATED = "CREATED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+
+
 class WorkflowState(BaseModel):
     """
     Maintains the runtime execution state of a task plan.
+
+    WorkflowState represents what has happened during workflow execution.
+    It does not contain orchestration logic; transitions are controlled by
+    the Workflow Engine.
     """
-    task_id: str = Field(description="Task identifier being executed")
-    plan_id: str = Field(description="Plan identifier associated with this workflow")
-    step_statuses: Dict[str, StepStatus] = Field(
-        default_factory=dict, description="Map of step_id to current StepStatus"
+
+    request_context: RequestContext = Field(
+        description="Request context associated with this workflow execution"
     )
-    step_results: Dict[str, Any] = Field(
-        default_factory=dict, description="Map of step_id to step execution results/evidence"
+
+    task_id: str = Field(
+        description="Task identifier being executed"
     )
-    step_artifacts: Dict[str, List[Artifact]] = Field(
-        default_factory=dict, description="Map of step_id to generated artifacts"
+
+    plan_id: str = Field(
+        description="Execution plan identifier associated with this workflow"
     )
-    retry_counts: Dict[str, int] = Field(
-        default_factory=dict, description="Map of step_id to retry count attempts"
+
+    status: WorkflowStatus = Field(
+        default=WorkflowStatus.CREATED,
+        description="Current lifecycle status of the overall workflow"
+    )
+
+    step_statuses: dict[str, StepStatus] = Field(
+        default_factory=dict,
+        description="Map of step_id to current StepStatus"
+    )
+
+    step_results: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Map of step_id to step execution results or evidence"
+    )
+
+    step_artifacts: dict[str, list[Artifact]] = Field(
+        default_factory=dict,
+        description="Map of step_id to artifacts generated during execution"
+    )
+
+    retry_counts: dict[str, int] = Field(
+        default_factory=dict,
+        description=(
+            "Map of step_id to number of retries already performed for "
+            "that step"
+        )
     )

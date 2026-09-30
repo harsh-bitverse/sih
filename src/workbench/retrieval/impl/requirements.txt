@@ -1,0 +1,8 @@
+# Sovereign On-Premise Data Retrieval & Knowledge Engine (Person 3)
+# Core Dependencies
+pydantic>=2.10.0
+pypdf>=4.0.0
+rank-bm25>=0.2.2
+scikit-learn>=1.4.0
+pillow>=10.0.0
+pytest>=8.0.0

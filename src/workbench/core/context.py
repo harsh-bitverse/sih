@@ -33,5 +33,5 @@ class RequestContext(BaseModel):
     )
     timestamp: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        description="UTC timestamp when the context was instantiated or updated",
+        description="UTC timestamp when this request context was created",
     )

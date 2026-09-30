@@ -6,7 +6,7 @@ Subsystem: core
 """
 
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 from pydantic import BaseModel, Field
 
 
@@ -34,9 +34,9 @@ class Artifact(BaseModel):
     location: str = Field(description="Storage URI or filesystem path to artifact")
     mime_type: str = Field(description="MIME type classification of the content")
     created_by: str = Field(description="Subsystem or agent identifier that generated this artifact")
-    source_information: Dict[str, Any] = Field(
+    source_information: dict[str, Any] = Field(
         default_factory=dict, description="Metadata regarding creation tool, model, or process"
     )
-    metadata: Dict[str, Any] = Field(
+    metadata: dict[str, Any] = Field(
         default_factory=dict, description="Additional custom metadata tags and attributes"
     )
